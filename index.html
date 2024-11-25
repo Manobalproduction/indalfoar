@@ -55,6 +55,14 @@
       const unmuteButton = document.getElementById("unmute-video");
       const marker = document.querySelector("[mindar-image-target]");
 
+     video.addEventListener('loadeddata', function() {
+       video.muted = false;
+        unmuteButton.style.display = "none";
+      });
+      
+      
+      
+      
       // Unmute video on button click
       unmuteButton.addEventListener("click", () => {
         video.muted = false; // Unmute the video
