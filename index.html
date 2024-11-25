@@ -23,6 +23,7 @@
           autoplay
           loop
           playsinline
+          muted
           preload="auto"
         ></video>
       </a-assets>
@@ -44,24 +45,30 @@
       </a-entity>
     </a-scene>
 
-    <!-- Play with Sound Button -->
-    <button id="play-with-sound" style="position: fixed; bottom: 20px; left: 20px; z-index: 100;">
-      Play with Sound
+    <!-- Unmute Button -->
+    <button id="unmute-video" style="position: fixed; bottom: 20px; left: 20px; z-index: 100;">
+      Unmute
     </button>
 
     <script>
-      // Unmute and play video with sound on button click
-      document.getElementById("play-with-sound").addEventListener("click", () => {
-        const video = document.querySelector("#video");
-        video.muted = false; // Ensure sound is on
-        video.play().catch((error) => {
-          console.error("Error playing video with sound:", error);
-        });
+      const video = document.querySelector("#video");
+      const unmuteButton = document.getElementById("unmute-video");
+      const marker = document.querySelector("[mindar-image-target]");
+
+      // Unmute video on button click
+      unmuteButton.addEventListener("click", () => {
+        video.muted = false; // Unmute the video
+        unmuteButton.style.display = "none"; // Hide the button after unmuting
       });
 
-      // Play muted video on page load
+      // Pause video when marker is lost
+      marker.addEventListener("targetLost", () => {
+        video.pause();
+        console.log("Marker lost. Video paused.");
+      });
+
+      // Autoplay video when the page loads (muted by default)
       document.addEventListener("DOMContentLoaded", () => {
-        const video = document.querySelector("#video");
         video.play().catch((error) => {
           console.error("Error playing video:", error);
         });
