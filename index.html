@@ -45,7 +45,22 @@
       </a-entity>
     </a-scene>
 
+    <!-- Play with Sound Button -->
+    <button id="play-with-sound" style="position: fixed; bottom: 20px; left: 20px; z-index: 100;">
+      Play with Sound
+    </button>
+
     <script>
+      // Unmute and play video with sound on button click
+      document.getElementById("play-with-sound").addEventListener("click", () => {
+        const video = document.querySelector("#video");
+        video.muted = false; // Ensure sound is on
+        video.play().catch((error) => {
+          console.error("Error playing video with sound:", error);
+        });
+      });
+
+      // Play muted video on page load
       document.addEventListener("DOMContentLoaded", () => {
         const video = document.querySelector("#video");
         video.play().catch((error) => {
