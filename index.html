@@ -5,30 +5,46 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   </head>
   <body>
-    <a-scene 
-      mindar-image="imageTargetSrc: https://manobalproduction.github.io/indalfoar/targets.mind;" <!-- Path to your target file -->
+    <a-scene
+      mindar-image="imageTargetSrc: ./targets.mind;"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
+        <!-- Marker Image -->
+        <img id="card" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png" />
+
         <!-- Video Asset -->
-        <video id="video" src="https://manobalproduction.github.io/indalfoar/video.mp4" preload="auto" loop autoplay playsinline muted></video> <!-- Path to your video -->
+        <video
+          id="video"
+          src="video.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+        ></video>
       </a-assets>
 
+      <!-- Camera -->
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <!-- Marker Target -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <!-- Video Playback on target -->
-        <a-video 
+        <!-- Marker Display -->
+        <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
+
+        <!-- Video Playback -->
+        <a-video
           src="#video"
-          position="0 0 0"  <!-- Set the position in 3D space -->
-          rotation="0 0 0"  <!-- Set the rotation to make sure it's upright -->
-          scale="1 1 1"     <!-- Set scale to ensure the video fits properly -->
-          height="0.552"    <!-- Set the height of the video -->
-          width="1"         <!-- Set the width of the video -->
+          position="0 0 0.1"
+          width="1"
+          height="0.5625"
+          rotation="0 0 0"
+          autoplay
+          muted
         ></a-video>
       </a-entity>
     </a-scene>
