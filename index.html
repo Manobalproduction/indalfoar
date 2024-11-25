@@ -16,7 +16,7 @@
         <!-- Video Asset -->
         <video
           id="vid"
-          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          src="./video.mp4"
           preload="auto"
           loop
           autoplay
@@ -27,7 +27,7 @@
       </a-assets>
 
       <!-- Camera -->
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <a-camera position="0 0 0"></a-camera>
 
       <!-- Marker Target -->
       <a-entity mindar-image-target="targetIndex: 0">
@@ -41,5 +41,24 @@
         ></a-video>
       </a-entity>
     </a-scene>
+
+    <script>
+      const videoEl = document.querySelector("#vid");
+
+      // Ensure video starts when AR marker is detected
+      videoEl.addEventListener("loadeddata", () => {
+        console.log("Video loaded. Starting playback...");
+        videoEl.play();
+      });
+
+      // Debugging video playback
+      videoEl.addEventListener("play", () => {
+        console.log("Video started playing.");
+      });
+
+      videoEl.addEventListener("error", (e) => {
+        console.error("Video playback error:", e);
+      });
+    </script>
   </body>
 </html>
