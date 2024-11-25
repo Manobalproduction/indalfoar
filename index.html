@@ -24,10 +24,11 @@
         <!-- Video Playback on target -->
         <a-video 
           src="#video"
-          position="0 0 0"
-          height="0.552"
-          width="1"
-          rotation="0 0 0"
+          position="0 0 0"  <!-- Set the position in 3D space -->
+          rotation="0 0 0"  <!-- Set the rotation to make sure it's upright -->
+          scale="1 1 1"     <!-- Set scale to ensure the video fits properly -->
+          height="0.552"    <!-- Set the height of the video -->
+          width="1"         <!-- Set the width of the video -->
         ></a-video>
       </a-entity>
     </a-scene>
