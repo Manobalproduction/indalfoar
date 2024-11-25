@@ -23,7 +23,6 @@
           autoplay
           loop
           playsinline
-          muted
           preload="auto"
         ></video>
       </a-assets>
@@ -45,29 +44,22 @@
       </a-entity>
     </a-scene>
 
-    <!-- Unmute Button -->
-    <button id="unmute-video" style="position: fixed; bottom: 20px; left: 20px; z-index: 100;">
-      Unmute
-    </button>
-
     <script>
       const video = document.querySelector("#video");
-      const unmuteButton = document.getElementById("unmute-video");
       const marker = document.querySelector("[mindar-image-target]");
 
-     video.addEventListener('loadeddata', function() {
-       video.muted = false;
-        unmuteButton.style.display = "none";
-      });
-      
-      
-      
-      
-      // Unmute video on button click
-      unmuteButton.addEventListener("click", () => {
+      // Autoplay video unmuted on page load after user interaction
+      const enableVideo = () => {
         video.muted = false; // Unmute the video
-        unmuteButton.style.display = "none"; // Hide the button after unmuting
-      });
+        video.play()
+          .then(() => console.log("Video autoplayed unmuted."))
+          .catch((error) => console.error("Autoplay failed:", error));
+        // Remove the event listener once triggered
+        document.removeEventListener("click", enableVideo);
+      };
+
+      // Add listener for user interaction to enable video playback with sound
+      document.addEventListener("click", enableVideo);
 
       // Pause video when marker is lost
       marker.addEventListener("targetLost", () => {
@@ -81,13 +73,6 @@
           console.error("Error resuming video:", error);
         });
         console.log("Marker found. Video resumed.");
-      });
-
-      // Autoplay video when the page loads (muted by default)
-      document.addEventListener("DOMContentLoaded", () => {
-        video.play().catch((error) => {
-          console.error("Error playing video:", error);
-        });
       });
     </script>
   </body>
