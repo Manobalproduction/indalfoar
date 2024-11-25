@@ -67,6 +67,14 @@
         console.log("Marker lost. Video paused.");
       });
 
+      // Resume video when marker is found
+      marker.addEventListener("targetFound", () => {
+        video.play().catch((error) => {
+          console.error("Error resuming video:", error);
+        });
+        console.log("Marker found. Video resumed.");
+      });
+
       // Autoplay video when the page loads (muted by default)
       document.addEventListener("DOMContentLoaded", () => {
         video.play().catch((error) => {
