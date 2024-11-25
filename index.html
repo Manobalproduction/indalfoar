@@ -43,21 +43,29 @@
     </a-scene>
 
     <script>
+      // Debugging Video Loading
       const videoEl = document.querySelector("#vid");
-
-      // Ensure video starts when AR marker is detected
       videoEl.addEventListener("loadeddata", () => {
-        console.log("Video loaded. Starting playback...");
+        console.log("Video loaded successfully.");
         videoEl.play();
       });
 
-      // Debugging video playback
       videoEl.addEventListener("play", () => {
-        console.log("Video started playing.");
+        console.log("Video is playing.");
       });
 
       videoEl.addEventListener("error", (e) => {
-        console.error("Video playback error:", e);
+        console.error("Error loading video:", e);
+      });
+
+      // Debugging Scene Initialization
+      const scene = document.querySelector("a-scene");
+      scene.addEventListener("loaded", () => {
+        console.log("A-Frame scene loaded.");
+      });
+
+      scene.addEventListener("error", (e) => {
+        console.error("A-Frame scene error:", e);
       });
     </script>
   </body>
