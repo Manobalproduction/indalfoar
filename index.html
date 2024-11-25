@@ -5,8 +5,8 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   </head>
   <body>
-    <a-scene
-      mindar-image="imageTargetSrc: ./targets.mind;"  <!-- Ensure targets.mind is correctly located -->
+    <a-scene 
+      mindar-image="imageTargetSrc: https://manobalproduction.github.io/indalfoar/targets.mind;" <!-- Path to your target file -->
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
@@ -14,26 +14,15 @@
     >
       <a-assets>
         <!-- Video Asset -->
-        <video
-          id="vid"
-          src="./video.mp4"  <!-- Ensure video.mp4 is correctly located in the repository -->
-          preload="auto"
-          loop
-          autoplay
-          playsinline
-          muted
-          crossorigin="anonymous"
-        ></video>
+        <video id="video" src="https://manobalproduction.github.io/indalfoar/video.mp4" preload="auto" loop autoplay playsinline muted></video> <!-- Path to your video -->
       </a-assets>
 
-      <!-- Camera -->
-      <a-camera position="0 0 0"></a-camera>
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!-- Marker Target -->
       <a-entity mindar-image-target="targetIndex: 0">
         <!-- Video Playback -->
-        <a-video
-          src="#vid"
+        <a-video 
+          src="#video"
           position="0 0 0"
           height="0.552"
           width="1"
@@ -41,32 +30,5 @@
         ></a-video>
       </a-entity>
     </a-scene>
-
-    <script>
-      // Debugging Video Loading
-      const videoEl = document.querySelector("#vid");
-      videoEl.addEventListener("loadeddata", () => {
-        console.log("Video loaded successfully.");
-        videoEl.play();
-      });
-
-      videoEl.addEventListener("play", () => {
-        console.log("Video is playing.");
-      });
-
-      videoEl.addEventListener("error", (e) => {
-        console.error("Error loading video:", e);
-      });
-
-      // Debugging Scene Initialization
-      const scene = document.querySelector("a-scene");
-      scene.addEventListener("loaded", () => {
-        console.log("A-Frame scene loaded.");
-      });
-
-      scene.addEventListener("error", (e) => {
-        console.error("A-Frame scene error:", e);
-      });
-    </script>
   </body>
 </html>
