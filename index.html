@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -6,9 +7,9 @@
   </head>
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: ./targets6.mind;"
+      mindar-image="imageTargetSrc: ./targets6.mind; filterMinCF: 0.001; filterBeta: 0.01;"
       color-space="sRGB"
-      renderer="colorManagement: true, physicallyCorrectLights"
+      renderer="colorManagement: true, physicallyCorrectLights, depth: true"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
@@ -32,14 +33,17 @@
 
       <!-- Marker Target -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <!-- Video Playback -->
+        <!-- Video Playback with Smoothing -->
         <a-video
           src="#video"
-          position="0 0 0"
+          position="0 0 0.01"
           width="1"
           height="0.552"
           rotation="0 0 0"
+          scale="1 1 1"
           autoplay
+          animation__position="property: position; to: 0 0 0.01; dur: 100; easing: easeOutCubic; loop: true"
+          animation__rotation="property: rotation; to: 0 0 0; dur: 100; easing: easeOutCubic; loop: true"
         ></a-video>
       </a-entity>
     </a-scene>
@@ -73,6 +77,11 @@
           console.error("Error resuming video:", error);
         });
         console.log("Marker found. Video resumed.");
+      });
+
+      // Debugging marker tracking status
+      marker.addEventListener("targetUpdate", (event) => {
+        console.log("Marker status:", event.detail);
       });
     </script>
   </body>
