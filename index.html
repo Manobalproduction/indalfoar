@@ -6,13 +6,16 @@
   </head>
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: ./targets6.mind;"
+      mindar-image="imageTargetSrc: ./targets5.mind;"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
+        <!-- Marker Image -->
+        <img id="card" src="./targets5.mind" />
+
         <!-- Video Asset -->
         <video
           id="video"
@@ -27,12 +30,8 @@
       <!-- Camera -->
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!-- Marker Target with Stabilization -->
-      <a-entity 
-        mindar-image-target="targetIndex: 0" 
-        position-interpolation="enabled: true; factor: 0.5" 
-        rotation-interpolation="enabled: true; factor: 0.5"
-      >
+      <!-- Marker Target -->
+      <a-entity mindar-image-target="targetIndex: 0">
         <!-- Video Playback -->
         <a-video
           src="#video"
@@ -49,7 +48,7 @@
       const video = document.querySelector("#video");
       const marker = document.querySelector("[mindar-image-target]");
 
-      // Enable video playback on user interaction
+      // Autoplay video unmuted on page load after user interaction
       const enableVideo = () => {
         video.muted = false; // Unmute the video
         video.play()
@@ -58,43 +57,22 @@
         // Remove the event listener once triggered
         document.removeEventListener("click", enableVideo);
       };
+
+      // Add listener for user interaction to enable video playback with sound
       document.addEventListener("click", enableVideo);
 
-      // Pause video when the marker is lost
+      // Pause video when marker is lost
       marker.addEventListener("targetLost", () => {
         video.pause();
         console.log("Marker lost. Video paused.");
       });
 
-      // Resume video when the marker is found
+      // Resume video when marker is found
       marker.addEventListener("targetFound", () => {
         video.play().catch((error) => {
           console.error("Error resuming video:", error);
         });
         console.log("Marker found. Video resumed.");
-      });
-
-      // Stabilize updates for position and rotation
-      let lastPosition = { x: 0, y: 0, z: 0 };
-      let lastRotation = { x: 0, y: 0, z: 0 };
-
-      marker.addEventListener("targetUpdated", (event) => {
-        const { position, rotation } = event.detail;
-
-        // Smooth position
-        lastPosition.x += (position.x - lastPosition.x) * 0.1;
-        lastPosition.y += (position.y - lastPosition.y) * 0.1;
-        lastPosition.z += (position.z - lastPosition.z) * 0.1;
-
-        // Smooth rotation
-        lastRotation.x += (rotation.x - lastRotation.x) * 0.1;
-        lastRotation.y += (rotation.y - lastRotation.y) * 0.1;
-        lastRotation.z += (rotation.z - lastRotation.z) * 0.1;
-
-        // Update video position and rotation
-        const videoEntity = document.querySelector("a-video");
-        videoEntity.setAttribute("position", `${lastPosition.x} ${lastPosition.y} ${lastPosition.z}`);
-        videoEntity.setAttribute("rotation", `${lastRotation.x} ${lastRotation.y} ${lastRotation.z}`);
       });
     </script>
   </body>
