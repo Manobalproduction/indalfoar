@@ -13,17 +13,29 @@
     canvas {
       display: block;
     }
+    #video-element {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   </style>
 </head>
 <body>
   <div id="ar-container">
-    <video id="video-element" width="320" height="240" loop muted playsinline style="display: none;">
+    <!-- Video Element -->
+    <video id="video-element" width="320" height="240" loop muted playsinline>
       <source src="video.mp4" type="video/mp4">
     </video>
+    
+    <!-- MindAR Viewer -->
     <mindar-viewer
       id="mindar-viewer"
       mindar-image-target="targets6.mind"
-      overlay-alpha="0.9">
+      overlay-alpha="0.9"
+      camera-permission="true"
+      video-width="640"
+      video-height="480">
     </mindar-viewer>
   </div>
 
@@ -32,20 +44,39 @@
       const mindarViewer = document.querySelector("#mindar-viewer");
       const videoElement = document.querySelector("#video-element");
 
-      // Add a listener for when the image target is found
+      // Debug Camera Permissions
+      try {
+        console.log("Checking camera access...");
+        await navigator.mediaDevices.getUserMedia({ video: true });
+        console.log("Camera access successful.");
+      } catch (error) {
+        console.error("Error accessing the camera:", error);
+        alert("Camera access is required for this AR experience.");
+        return;
+      }
+
+      // Setup MindAR Event Listeners
       mindarViewer.addEventListener("targetFound", () => {
+        console.log("Target found!");
         videoElement.style.display = "block";
         videoElement.play();
       });
 
-      // Add a listener for when the image target is lost
       mindarViewer.addEventListener("targetLost", () => {
+        console.log("Target lost!");
         videoElement.pause();
         videoElement.style.display = "none";
       });
 
-      // Initialize the MindAR viewer
-      await mindarViewer.start();
+      // Initialize MindAR Viewer
+      try {
+        console.log("Starting MindAR Viewer...");
+        await mindarViewer.start();
+        console.log("MindAR Viewer started successfully.");
+      } catch (error) {
+        console.error("Error starting MindAR Viewer:", error);
+        alert("There was an issue starting the AR experience. Please try again.");
+      }
     });
   </script>
 </body>
