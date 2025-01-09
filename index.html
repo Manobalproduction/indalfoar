@@ -44,38 +44,34 @@
       const mindarViewer = document.querySelector("#mindar-viewer");
       const videoElement = document.querySelector("#video-element");
 
-      // Debug Camera Permissions
       try {
+        // Step 1: Test Camera Permissions
         console.log("Checking camera access...");
         await navigator.mediaDevices.getUserMedia({ video: true });
         console.log("Camera access successful.");
-      } catch (error) {
-        console.error("Error accessing the camera:", error);
-        alert("Camera access is required for this AR experience.");
-        return;
-      }
 
-      // Setup MindAR Event Listeners
-      mindarViewer.addEventListener("targetFound", () => {
-        console.log("Target found!");
-        videoElement.style.display = "block";
-        videoElement.play();
-      });
-
-      mindarViewer.addEventListener("targetLost", () => {
-        console.log("Target lost!");
-        videoElement.pause();
-        videoElement.style.display = "none";
-      });
-
-      // Initialize MindAR Viewer
-      try {
+        // Step 2: Initialize MindAR Viewer
         console.log("Starting MindAR Viewer...");
         await mindarViewer.start();
         console.log("MindAR Viewer started successfully.");
+
+        // Step 3: Add Event Listeners for Target Tracking
+        mindarViewer.addEventListener("targetFound", () => {
+          console.log("Target found!");
+          videoElement.style.display = "block";
+          videoElement.play();
+        });
+
+        mindarViewer.addEventListener("targetLost", () => {
+          console.log("Target lost!");
+          videoElement.pause();
+          videoElement.style.display = "none";
+        });
+
       } catch (error) {
-        console.error("Error starting MindAR Viewer:", error);
-        alert("There was an issue starting the AR experience. Please try again.");
+        // Handle Errors During Initialization
+        console.error("Error initializing AR experience:", error);
+        alert(`AR Experience Error: ${error.message}`);
       }
     });
   </script>
