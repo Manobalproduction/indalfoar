@@ -30,10 +30,9 @@
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <!-- Marker Target -->
-      <a-entity id="marker" mindar-image-target="targetIndex: 0">
+      <a-entity mindar-image-target="targetIndex: 0">
         <!-- Video Playback -->
         <a-video
-          id="videoElement"
           src="#video"
           position="0 0 0"
           width="1"
@@ -46,31 +45,18 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const video = document.querySelector("#video");
-        const videoElement = document.querySelector("#videoElement");
-        const marker = document.querySelector("#marker");
 
         // Start video muted to comply with autoplay policies
         video.muted = true;
-        
-        // Control video and audio based on marker visibility
-        marker.addEventListener("markerFound", () => {
+
+        // Play video when it's ready and unmute it
+        video.addEventListener("loadeddata", () => {
           video.play().then(() => {
             video.muted = false; // Unmute the video after playback starts
             console.log("Video is playing with audio.");
           }).catch((error) => {
             console.error("Error playing video with audio:", error);
           });
-        });
-
-        marker.addEventListener("markerLost", () => {
-          video.pause(); // Pause the video when the marker is lost
-          video.currentTime = 0; // Reset video to the start
-          console.log("Video paused and reset.");
-        });
-
-        // Play video when it's ready
-        video.addEventListener("loadeddata", () => {
-          console.log("Video is loaded and ready.");
         });
       });
     </script>
