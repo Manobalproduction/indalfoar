@@ -30,7 +30,7 @@
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <!-- Marker Target -->
-      <a-entity id="marker" mindar-image-target="targetIndex: 0">
+      <a-entity mindar-image-target="targetIndex: 0">
         <!-- Video Playback -->
         <a-video
           src="#video"
@@ -45,8 +45,6 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const video = document.querySelector("#video");
-        const marker = document.querySelector("#marker");
-        const scene = document.querySelector("a-scene");
 
         // Start video muted to comply with autoplay policies
         video.muted = true;
@@ -54,26 +52,11 @@
         // Play video when it's ready and unmute it
         video.addEventListener("loadeddata", () => {
           video.play().then(() => {
-            // Wait for 1 second and then unmute the video/audio
-            setTimeout(() => {
-              video.muted = false; // Unmute the video after 1 second
-              console.log("Audio is playing after 1 second of video.");
-            }, 1000); // 1 second delay (1000 milliseconds)
+            video.muted = false; // Unmute the video after playback starts
+            console.log("Video is playing with audio.");
           }).catch((error) => {
             console.error("Error playing video with audio:", error);
           });
-        });
-
-        // Check if marker is detected
-        scene.addEventListener('loaded', () => {
-          const targetComponent = marker.components["mindar-image-target"];
-          
-          setInterval(() => {
-            if (!targetComponent.isDetected) {
-              video.pause();
-              console.log("Marker lost, video and audio paused.");
-            }
-          }, 100);
         });
       });
     </script>
