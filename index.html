@@ -1,3 +1,5 @@
+
+
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,9 +28,6 @@
           muted
           preload="auto"
         ></video>
-
-        <!-- Audio Asset -->
-        <audio id="audio" src="./audio.mp3" loop preload="auto"></audio>
       </a-assets>
 
       <!-- Camera -->
@@ -51,34 +50,9 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const video = document.querySelector("#video");
-        const audio = document.querySelector("#audio");
-
-        // Attempt to play video
         video.play().catch((error) => {
           console.error("Error playing video:", error);
         });
-
-        // Set up audio context for autoplay compliance
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioContext = new AudioContext();
-
-        const playAudio = () => {
-          // Resume audio context on user interaction
-          if (audioContext.state === "suspended") {
-            audioContext.resume().then(() => {
-              console.log("AudioContext resumed");
-              audio.play().then(() => {
-                console.log("Audio is playing");
-              }).catch((error) => {
-                console.error("Error playing audio:", error);
-              });
-            });
-          }
-        };
-
-        // Add user interaction listeners
-        document.body.addEventListener("click", playAudio);
-        document.body.addEventListener("touchstart", playAudio);
       });
     </script>
   </body>
