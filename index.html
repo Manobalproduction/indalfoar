@@ -38,7 +38,6 @@
           width="1"
           height="0.5625"
           rotation="0 0 0"
-          autoplay
         ></a-video>
       </a-entity>
     </a-scene>
@@ -47,20 +46,15 @@
       document.addEventListener("DOMContentLoaded", () => {
         const video = document.querySelector("#video");
         
-        // Wait for user interaction to play video with sound
-        const enableAudioPlayback = () => {
-          video.play().then(() => {
-            console.log("Video is playing with audio.");
-          }).catch((error) => {
-            console.error("Error playing video with audio:", error);
-          });
-
-          // Remove the event listener after interaction
-          document.body.removeEventListener("click", enableAudioPlayback);
-        };
-
-        // Add click event listener to enable audio
-        document.body.addEventListener("click", enableAudioPlayback);
+        // Attempt to play video with audio
+        video.muted = true; // Start muted to bypass autoplay restrictions
+        video.play().then(() => {
+          // If playback starts, unmute the video
+          video.muted = false;
+          console.log("Video is playing with audio.");
+        }).catch((error) => {
+          console.error("Error playing video with audio:", error);
+        });
       });
     </script>
   </body>
