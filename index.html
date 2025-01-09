@@ -46,6 +46,7 @@
       document.addEventListener("DOMContentLoaded", () => {
         const video = document.querySelector("#video");
         const marker = document.querySelector("#marker");
+        const scene = document.querySelector("a-scene");
 
         // Start video muted to comply with autoplay policies
         video.muted = true;
@@ -60,20 +61,16 @@
           });
         });
 
-        // Pause the video and audio when the marker is not detected
-        marker.addEventListener("markerLost", () => {
-          video.pause();
-          console.log("Marker lost, video and audio paused.");
-        });
-
-        // Optional: Play the video again when the marker is detected
-        marker.addEventListener("markerFound", () => {
-          video.play().then(() => {
-            video.muted = false;
-            console.log("Marker found, video and audio resumed.");
-          }).catch((error) => {
-            console.error("Error resuming video with audio:", error);
-          });
+        // Check if marker is detected
+        scene.addEventListener('loaded', () => {
+          const targetComponent = marker.components["mindar-image-target"];
+          
+          setInterval(() => {
+            if (!targetComponent.isDetected) {
+              video.pause();
+              console.log("Marker lost, video and audio paused.");
+            }
+          }, 100);
         });
       });
     </script>
