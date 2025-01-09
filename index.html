@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Tracking with Video</title>
   <script src="https://cdn.jsdelivr.net/npm/mindar-js@1.1.2/dist/mindar-image.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mindar-js@1.1.2/dist/three.prod.js"></script>
   <style>
     body {
       margin: 0;
@@ -27,51 +29,59 @@
     <video id="video-element" width="320" height="240" loop muted playsinline>
       <source src="video.mp4" type="video/mp4">
     </video>
-    
-    <!-- MindAR Viewer -->
-    <mindar-viewer
-      id="mindar-viewer"
-      mindar-image-target="targets6.mind"
-      overlay-alpha="0.9"
-      camera-permission="true"
-      video-width="640"
-      video-height="480">
-    </mindar-viewer>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
-      const mindarViewer = document.querySelector("#mindar-viewer");
       const videoElement = document.querySelector("#video-element");
 
       try {
-        // Step 1: Test Camera Permissions
-        console.log("Checking camera access...");
-        await navigator.mediaDevices.getUserMedia({ video: true });
-        console.log("Camera access successful.");
-
-        // Step 2: Initialize MindAR Viewer
-        console.log("Starting MindAR Viewer...");
-        await mindarViewer.start();
-        console.log("MindAR Viewer started successfully.");
-
-        // Step 3: Add Event Listeners for Target Tracking
-        mindarViewer.addEventListener("targetFound", () => {
-          console.log("Target found!");
-          videoElement.style.display = "block";
-          videoElement.play();
+        // Initialize MindARThree
+        console.log("Initializing MindAR...");
+        const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+          container: document.body,
+          imageTargetSrc: "targets6.mind",
         });
 
-        mindarViewer.addEventListener("targetLost", () => {
+        const { renderer, scene, camera } = mindarThree;
+
+        // Add a plane to display the video
+        const videoTexture = new THREE.VideoTexture(videoElement);
+        const geometry = new THREE.PlaneGeometry(1, 0.75);
+        const material = new THREE.MeshBasicMaterial({ map: videoTexture });
+        const plane = new THREE.Mesh(geometry, material);
+        plane.position.set(0, 0, 0);
+
+        // Add a MindAR Anchor
+        const anchor = mindarThree.addAnchor(0); // Target ID 0 from `targets6.mind`
+        anchor.group.add(plane);
+
+        // Start AR experience
+        await mindarThree.start();
+        console.log("AR experience started!");
+
+        videoElement.style.display = "block";
+        videoElement.play();
+
+        // Animation Loop
+        renderer.setAnimationLoop(() => {
+          renderer.render(scene, camera);
+        });
+
+        // Event Listeners for Target
+        anchor.onTargetFound = () => {
+          console.log("Target found!");
+          videoElement.play();
+        };
+
+        anchor.onTargetLost = () => {
           console.log("Target lost!");
           videoElement.pause();
-          videoElement.style.display = "none";
-        });
+        };
 
       } catch (error) {
-        // Handle Errors During Initialization
-        console.error("Error initializing AR experience:", error);
-        alert(`AR Experience Error: ${error.message}`);
+        console.error("Error starting AR experience:", error);
+        alert(`Failed to start AR: ${error.message}`);
       }
     });
   </script>
