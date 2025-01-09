@@ -1,11 +1,12 @@
-<head>
+<html>
+  <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   </head>
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: ./targets6.mind;"
+      mindar-image="imageTargetSrc: ./targets.mind;"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
@@ -13,13 +14,12 @@
     >
       <a-assets>
         <!-- Marker Image -->
-        <img id="card" src="./targets6.mind" />
+        <img id="card" src="./targets.mind" />
 
         <!-- Video Asset -->
         <video
           id="video"
           src="./video.mp4"
-          autoplay
           loop
           playsinline
           preload="auto"
@@ -30,48 +30,51 @@
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <!-- Marker Target -->
-      <a-entity mindar-image-target="targetIndex: 0">
+      <a-entity id="marker" mindar-image-target="targetIndex: 0">
         <!-- Video Playback -->
         <a-video
           src="#video"
           position="0 0 0"
           width="1"
-          height="0.552"
+          height="0.5625"
           rotation="0 0 0"
-          autoplay
         ></a-video>
       </a-entity>
     </a-scene>
 
     <script>
-      const video = document.querySelector("#video");
-      const marker = document.querySelector("[mindar-image-target]");
+      document.addEventListener("DOMContentLoaded", () => {
+        const video = document.querySelector("#video");
+        const marker = document.querySelector("#marker");
+        const scene = document.querySelector("a-scene");
 
-      // Autoplay video unmuted on page load after user interaction
-      const enableVideo = () => {
-        video.muted = false; // Unmute the video
-        video.play()
-          .then(() => console.log("Video autoplayed unmuted."))
-          .catch((error) => console.error("Autoplay failed:", error));
-        // Remove the event listener once triggered
-        document.removeEventListener("click", enableVideo);
-      };
+        // Start video muted to comply with autoplay policies
+        video.muted = true;
 
-      // Add listener for user interaction to enable video playback with sound
-      document.addEventListener("click", enableVideo);
-
-      // Pause video when marker is lost
-      marker.addEventListener("targetLost", () => {
-        video.pause();
-        console.log("Marker lost. Video paused.");
-      });
-
-      // Resume video when marker is found
-      marker.addEventListener("targetFound", () => {
-        video.play().catch((error) => {
-          console.error("Error resuming video:", error);
+        // Play video when it's ready and unmute it
+        video.addEventListener("loadeddata", () => {
+          video.play().then(() => {
+            // Wait for 1 second and then unmute the video/audio
+            setTimeout(() => {
+              video.muted = false; // Unmute the video after 1 second
+              console.log("Audio is playing after 1 second of video.");
+            }, 1000); // 1 second delay (1000 milliseconds)
+          }).catch((error) => {
+            console.error("Error playing video with audio:", error);
+          });
         });
-        console.log("Marker found. Video resumed.");
+
+        // Check if marker is detected
+        scene.addEventListener('loaded', () => {
+          const targetComponent = marker.components["mindar-image-target"];
+          
+          setInterval(() => {
+            if (!targetComponent.isDetected) {
+              video.pause();
+              console.log("Marker lost, video and audio paused.");
+            }
+          }, 100);
+        });
       });
     </script>
   </body>
