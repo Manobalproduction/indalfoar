@@ -24,6 +24,7 @@
           loop
           playsinline
           preload="auto"
+          muted
         ></video>
       </a-assets>
 
@@ -44,19 +45,40 @@
       </a-entity>
     </a-scene>
 
-    <!-- Play with Sound Button -->
-    <button id="play-with-sound" style="position: fixed; bottom: 20px; left: 20px; z-index: 100;">
-      Play with Sound
+    <!-- View in AR Button -->
+    <button
+      id="view-in-ar"
+      style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 100;
+      "
+    >
+      View in AR
     </button>
 
     <script>
-      // Unmute and play video with sound on button click
-      document.getElementById("play-with-sound").addEventListener("click", () => {
+      // Handle "View in AR" button click
+      document.getElementById("view-in-ar").addEventListener("click", () => {
         const video = document.querySelector("#video");
-        video.muted = false; // Ensure sound is on
+
+        // Unmute and play video with sound
+        video.muted = false;
         video.play().catch((error) => {
           console.error("Error playing video with sound:", error);
         });
+
+        // Hide the button after click
+        document.getElementById("view-in-ar").style.display = "none";
       });
 
       // Play muted video on page load
