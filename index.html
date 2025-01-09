@@ -20,8 +20,10 @@
         <video
           id="video"
           src="./video.mp4"
+          autoplay
           loop
           playsinline
+          muted
           preload="auto"
         ></video>
       </a-assets>
@@ -38,6 +40,7 @@
           width="1"
           height="0.5625"
           rotation="0 0 0"
+          autoplay
         ></a-video>
       </a-entity>
     </a-scene>
@@ -45,20 +48,10 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const video = document.querySelector("#video");
-
-        // Start video muted to comply with autoplay policies
-        video.muted = true;
-
-        // Play video when it's ready and unmute it
-        video.addEventListener("loadeddata", () => {
-          video.play().then(() => {
-            video.muted = false; // Unmute the video after playback starts
-            console.log("Video is playing with audio.");
-          }).catch((error) => {
-            console.error("Error playing video with audio:", error);
-          });
+        video.play().catch((error) => {
+          console.error("Error playing video:", error);
         });
       });
     </script>
   </body>
-</html> 
+</html>  
