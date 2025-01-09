@@ -54,11 +54,11 @@
           .then(() => console.log("Video autoplayed unmuted."))
           .catch((error) => console.error("Autoplay failed:", error));
         // Remove the event listener once triggered
-        document.removeEventListener("click", enableVideo);
+        document.removeEventListener("load", enableVideo);
       };
 
       // Add listener for user interaction to enable video playback with sound
-      document.addEventListener("click", enableVideo);
+      document.addEventListener("load", enableVideo);
 
       // Pause video when marker is lost
       marker.addEventListener("targetLost", () => {
