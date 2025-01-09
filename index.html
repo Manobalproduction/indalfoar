@@ -45,6 +45,7 @@
           loop
           playsinline
           preload="auto"
+          muted
         ></video>
       </a-assets>
 
@@ -69,7 +70,6 @@
 
     <script>
       const video = document.querySelector("#video");
-      const marker = document.querySelector("[mindar-image-target]");
       const muteButton = document.querySelector("#muteButton");
 
       // Toggle mute and unmute
@@ -88,6 +88,9 @@
           muteButton.innerText = "Unmute"; // Change button text to "Unmute"
         }
       });
+
+      // Handle marker events for pausing and playing video
+      const marker = document.querySelector("[mindar-image-target]");
 
       // Pause video when marker is lost
       marker.addEventListener("targetLost", () => {
