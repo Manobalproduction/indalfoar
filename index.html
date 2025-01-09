@@ -58,6 +58,12 @@
             console.error("Error playing video with audio:", error);
           });
         });
+
+        // Pause the audio when the video is paused
+        video.addEventListener("pause", () => {
+          video.pause();
+          console.log("Video paused, audio is also paused.");
+        });
       });
     </script>
   </body>
