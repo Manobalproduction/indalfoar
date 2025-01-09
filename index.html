@@ -53,15 +53,28 @@
         const video = document.querySelector("#video");
         const audio = document.querySelector("#audio");
 
-        // Play video
+        // Attempt to play video on load
         video.play().catch((error) => {
           console.error("Error playing video:", error);
         });
 
-        // Play audio
-        audio.play().catch((error) => {
-          console.error("Error playing audio:", error);
-        });
+        // Trigger audio playback on user interaction
+        const playAudio = () => {
+          audio.play()
+            .then(() => {
+              console.log("Audio is playing");
+              // Remove the interaction listener once audio plays successfully
+              document.body.removeEventListener("click", playAudio);
+              document.body.removeEventListener("touchstart", playAudio);
+            })
+            .catch((error) => {
+              console.error("Error playing audio:", error);
+            });
+        };
+
+        // Add listeners for any user interaction to trigger audio
+        document.body.addEventListener("click", playAudio);
+        document.body.addEventListener("touchstart", playAudio);
       });
     </script>
   </body>
