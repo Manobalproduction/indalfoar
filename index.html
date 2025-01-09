@@ -28,7 +28,7 @@
         ></video>
 
         <!-- Audio Asset -->
-        <audio id="audio" src="./audio.mp3" preload="auto"></audio>
+        <audio id="audio" src="./audio.mp3" loop preload="auto"></audio>
       </a-assets>
 
       <!-- Camera -->
@@ -53,26 +53,30 @@
         const video = document.querySelector("#video");
         const audio = document.querySelector("#audio");
 
-        // Attempt to play video on load
+        // Attempt to play video
         video.play().catch((error) => {
           console.error("Error playing video:", error);
         });
 
-        // Trigger audio playback on user interaction
+        // Set up audio context for autoplay compliance
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioContext = new AudioContext();
+
         const playAudio = () => {
-          audio.play()
-            .then(() => {
-              console.log("Audio is playing");
-              // Remove the interaction listener once audio plays successfully
-              document.body.removeEventListener("click", playAudio);
-              document.body.removeEventListener("touchstart", playAudio);
-            })
-            .catch((error) => {
-              console.error("Error playing audio:", error);
+          // Resume audio context on user interaction
+          if (audioContext.state === "suspended") {
+            audioContext.resume().then(() => {
+              console.log("AudioContext resumed");
+              audio.play().then(() => {
+                console.log("Audio is playing");
+              }).catch((error) => {
+                console.error("Error playing audio:", error);
+              });
             });
+          }
         };
 
-        // Add listeners for any user interaction to trigger audio
+        // Add user interaction listeners
         document.body.addEventListener("click", playAudio);
         document.body.addEventListener("touchstart", playAudio);
       });
